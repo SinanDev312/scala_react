@@ -47,7 +47,7 @@ object StockMain extends JSApp {
 
     val routerConfig = RouterConfigDsl[Loc].buildConfig { dsl =>
       import dsl._
-      (staticRoute(root, StocksLoc) ~> renderR(ctl => StockTable.MainArea(0))
+      (staticRoute(root, StocksLoc) ~> renderR(ctl => StockTable.MainArea(Map.empty))
         ).notFound(redirectToPage(StocksLoc)(Redirect.Replace))
     }.renderWith(layout)
 

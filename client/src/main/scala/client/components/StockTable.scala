@@ -15,7 +15,7 @@ case class TeamState(m: Map[String, Team])
 case class MatchState(m: Map[String, Match])
 case class MarkState(m: Map[String, Mark])
 case class LongTermBetState(m: Map[String, LongTermBet])
-case class State(nav: Int)
+case class MainState(m: Int)
 
 // https://japgolly.github.io/scalajs-react/#examples/product-table
 object StockTable {
@@ -337,22 +337,30 @@ object StockTable {
   /*
    Left navbar links
   */
+  class Backend($: BackendScope[Map[String, Int], MainState]) {
+    def stop() = {}
+    def start() = {}
+    def changeNav(tmp: Int){
+      $.modState(x => MainState(tmp))
+    }
+  }
 
-  val MainArea = ReactComponentB[Unit]("MainArea")
-    .initialState(State(0))
-    .render((_, S, _) => {
+  val MainArea = ReactComponentB[Map[String, Int]]("MainArea")
+    .initialState(MainState(0))
+    .backend(new Backend(_))
+    .render((P, S, B) => {
       <.div(^.className := "row",
         <.div(^.className := "col-sm-3 col-md-2 sidebar",
           <.ul(^.className := "nav nav-sidebar",
-            <.li(<.a(^.href := "#", "Risks", ^.onClick --> {})),
-            <.li(<.a(^.href := "#", "Bets", ^.onClick --> {})),
-            <.li(<.a(^.href := "#", "Marks", ^.onClick --> {})),
-            <.li(<.a(^.href := "#", "Matches", ^.onClick --> {})),
-            <.li(<.a(^.href := "#", "Teams", ^.onClick --> {}))
-          ) // ul
-        ), // div sidebar
+            <.li(<.a(^.href := "#", "Risks", ^.onClick --> {B.changeNav(0)})),
+            <.li(<.a(^.href := "#", "Bets", ^.onClick --> {B.changeNav(1)})),
+            <.li(<.a(^.href := "#", "Marks", ^.onClick --> {B.changeNav(2)})),
+            <.li(<.a(^.href := "#", "Matches", ^.onClick --> {B.changeNav(3)})),
+            <.li(<.a(^.href := "#", "Teams", ^.onClick --> {B.changeNav(4)}))
+            ) // ul
+          ), // div sidebar
 
-/*        S.nav match {
+        S.m match {
           case 0 =>
             <.div(^.className := "col-sm-12 col-md-10",
               <.div(^.className := "table-responsive", ^.id := "table_area0", MatchRiskArea(Map.empty))
@@ -373,19 +381,12 @@ object StockTable {
             <.div(^.className := "col-sm-12 col-md-10",
               <.div(^.className := "table-responsive", ^.id := "table_area4", TeamArea(Map.empty))
             )
-        }*/
-
-          <.div(^.className := "col-sm-12 col-md-10",
-            <.div(^.className := "table-responsive", ^.id := "table_area0", MatchRiskArea(Map.empty)),
-            <.div(^.className := "table-responsive", ^.id := "table_area1", LongTermBetArea(Map.empty)),
-            <.div(^.className := "table-responsive", ^.id := "table_area2", MarkArea(Map.empty)),
-            <.div(^.className := "table-responsive", ^.id := "table_area3", MatchArea(Map.empty)),
-            <.div(^.className := "table-responsive", ^.id := "table_area4", TeamArea(Map.empty))
-          )
-              
-      ) // div row
+        }
+        ) // div row
     })
+    .componentDidMount(_.backend.start())
+    .componentWillUnmount(_.backend.stop())
     .build
  
-  def apply() = MainArea(State(0))
+  def apply() = MainArea(Map.empty)
 }
