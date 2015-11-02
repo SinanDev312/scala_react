@@ -81,7 +81,7 @@ case class HedgeBet(id: Int,
 				result: String,
 				PL: Int)
 
-//net risks
+//match risks
 case class MatchRisk(id: Int,
 				kickoff: String,
 				league: String,

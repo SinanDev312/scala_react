@@ -44,7 +44,7 @@ object StockTable {
         S.m match {
           case 0 =>
             <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.MatchRiskArea(Map.empty))
+              <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.RatingRiskArea(Map.empty))
             )
           case 1 =>
             <.div(^.className := "col-sm-12 col-md-10",
