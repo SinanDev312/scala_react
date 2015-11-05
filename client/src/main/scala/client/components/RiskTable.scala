@@ -148,8 +148,7 @@ object RiskTable {
   class TabBackend($: BackendScope[Map[String, Int], TabState]) {
     def stop() = {}
     def start() = {
-      console.log($.getDOMNode().querySelector("[type='radio']"));
-      $.getDOMNode().querySelector("[type='radio']").checked = "checked";
+      
     }
   }
 

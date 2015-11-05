@@ -154,7 +154,9 @@ object BetTable {
 
   class TabBackend($: BackendScope[Map[String, Int], TabState]) {
     def stop() = {}
-    def start() = {}
+    def start() = {
+
+    }
     def changeNav(tmp: Int){
       $.modState(x => TabState(tmp))
     }
