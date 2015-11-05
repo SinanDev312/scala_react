@@ -11,6 +11,7 @@ import java.text._
 
 case class MatchRiskState(m: Map[String, MatchRisk])
 case class RatingRiskState(m: Map[String, RatingRisk])
+case class TabState(m: Int)
 
 // https://japgolly.github.io/scalajs-react/#examples/product-table
 object RiskTable {
@@ -114,7 +115,7 @@ object RiskTable {
           <.td(s.market),
           <.td(s.team),
           <.td(s.coverage),
-          <.td(s.delta),
+          <.td(s.delta.formatted("%.2f")),
           <.td(s.LS),
           <.td(s.risk)
         ) // tr
@@ -143,5 +144,35 @@ object RiskTable {
     .build
 
 
-  def apply() = RatingRiskArea(Map.empty)
+  // Tab UI
+  class TabBackend($: BackendScope[Map[String, Int], TabState]) {
+    def stop() = {}
+    def start() = {
+      console.log($.getDOMNode().querySelector("[type='radio']"));
+      $.getDOMNode().querySelector("[type='radio']").checked = "checked";
+    }
+  }
+
+  val TabArea = ReactComponentB[Map[String, Int]]("TabArea")
+    .initialState(TabState(0))
+    .backend(new TabBackend(_))
+    .render((P, S, B) => {
+      <.div(^.className := "tabs", ^.height := "500px", 
+        <.div(^.className := "tab",
+          <.input(^.`type` := "radio", ^.id := "matchtab" , ^.name := "RiskAreaGroup"), 
+          <.label(^.`for` := "matchtab", "Match Risk"), 
+          <.div(^.className := "content", MatchRiskArea(Map.empty))
+        ),
+        <.div(^.className := "tab",
+          <.input(^.`type` := "radio", ^.id := "ratingtab" , ^.name := "RiskAreaGroup"), 
+          <.label(^.`for` := "ratingtab", "Rating Risk"), 
+          <.div(^.className := "content", RatingRiskArea(Map.empty))
+        )
+      )
+    })
+    .componentDidMount(_.backend.start())
+    .componentWillUnmount(_.backend.stop())
+    .build
+
+  def apply() = TabArea(Map.empty)
 }

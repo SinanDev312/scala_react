@@ -44,11 +44,11 @@ object StockTable {
         S.m match {
           case 0 =>
             <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.RatingRiskArea(Map.empty))
+              <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.TabArea(Map.empty))
             )
           case 1 =>
             <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area1", BetTable.LongTermBetArea(Map.empty))
+              <.div(^.className := "table-responsive", ^.id := "table_area1", BetTable.TabArea(Map.empty))
             )
           case 2 =>
             <.div(^.className := "col-sm-12 col-md-10",
