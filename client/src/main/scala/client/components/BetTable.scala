@@ -154,11 +154,10 @@ object BetTable {
 
   class TabBackend($: BackendScope[Map[String, Int], TabState]) {
     def stop() = {}
-    def start() = {
+    def start() = {}
 
-    }
-    def changeNav(tmp: Int){
-      $.modState(x => TabState(tmp))
+    def changeTab(m: Int) = {
+      $.modState(x => TabState(m))
     }
   }
 
@@ -168,12 +167,12 @@ object BetTable {
     .render((P, S, B) => {
       <.div(^.className := "tabs", ^.height := "500px", 
         <.div(^.className := "tab",
-          <.input(^.`type` := "radio", ^.id := "ltab" , ^.name := "BetAreaGroup"), 
+          <.input(^.`type` := "radio", ^.id := "ltab" , ^.name := "BetAreaGroup", ^.checked := {S.m == 0}, ^.onClick --> {B.changeTab(0)}), 
           <.label(^.`for` := "ltab", "Long Term Bet"), 
           <.div(^.className := "content", LongTermBetArea(Map.empty))
         ),
         <.div(^.className := "tab",
-          <.input(^.`type` := "radio", ^.id := "htab" , ^.name := "BetAreaGroup"), 
+          <.input(^.`type` := "radio", ^.id := "htab" , ^.name := "BetAreaGroup", ^.checked := {S.m == 1}, ^.onClick --> {B.changeTab(1)}), 
           <.label(^.`for` := "htab", "Hedge Bet"), 
           <.div(^.className := "content", HedgeBetArea(Map.empty))
         )

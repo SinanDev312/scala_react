@@ -147,8 +147,10 @@ object RiskTable {
   // Tab UI
   class TabBackend($: BackendScope[Map[String, Int], TabState]) {
     def stop() = {}
-    def start() = {
-      
+    def start() = {}
+
+    def changeTab(m: Int) = {
+      $.modState(x => TabState(m))
     }
   }
 
@@ -158,12 +160,12 @@ object RiskTable {
     .render((P, S, B) => {
       <.div(^.className := "tabs", ^.height := "500px", 
         <.div(^.className := "tab",
-          <.input(^.`type` := "radio", ^.id := "matchtab" , ^.name := "RiskAreaGroup"), 
+          <.input(^.`type` := "radio", ^.id := "matchtab" , ^.name := "RiskAreaGroup", ^.checked := {S.m == 0}, ^.onClick --> {B.changeTab(0)}), 
           <.label(^.`for` := "matchtab", "Match Risk"), 
           <.div(^.className := "content", MatchRiskArea(Map.empty))
         ),
         <.div(^.className := "tab",
-          <.input(^.`type` := "radio", ^.id := "ratingtab" , ^.name := "RiskAreaGroup"), 
+          <.input(^.`type` := "radio", ^.id := "ratingtab" , ^.name := "RiskAreaGroup", ^.checked := {S.m == 1}, ^.onClick --> {B.changeTab(1)}), 
           <.label(^.`for` := "ratingtab", "Rating Risk"), 
           <.div(^.className := "content", RatingRiskArea(Map.empty))
         )
