@@ -12,6 +12,7 @@ GET        /longterm_bet_ws           controllers.Application.longtermbetsocket
 GET        /hedge_bet_ws              controllers.Application.hedgebetsocket
 GET        /match_risk_ws             controllers.Application.matchrisksocket
 GET        /rating_risk_ws            controllers.Application.ratingrisksocket
+GET        /general_ws                controllers.Application.generalsocket
 
 # Map static resources from the /public folder to the /assets URL path
 # GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -3,7 +3,7 @@ package controllers
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, Controller, WebSocket}
 import play.libs.Akka
-import services.{UserConnection, StockServer, TeamServer, MatchServer, MarkServer, LBetServer, HBetServer, MatchRiskServer, RatingRiskServer}
+import services.{UserConnection, StockServer, TeamServer, MatchServer, MarkServer, LBetServer, HBetServer, MatchRiskServer, RatingRiskServer, GeneralServer}
 
 object Application extends Controller {
   import play.api.Logger
@@ -17,6 +17,7 @@ object Application extends Controller {
   val lbetServer = Akka.system.actorOf(LBetServer.props)
   val matchriskServer = Akka.system.actorOf(MatchRiskServer.props)
   val ratingriskServer = Akka.system.actorOf(RatingRiskServer.props)
+  val generalServer = Akka.system.actorOf(GeneralServer.props)
 
   def index = Action {
     Ok(views.html.index("REACTive Stocks Demo"))
@@ -52,6 +53,10 @@ object Application extends Controller {
 
   def ratingrisksocket = WebSocket.acceptWithActor[String, JsValue] { request => out =>
     UserConnection.props(ratingriskServer, out)
+  }
+
+  def generalsocket = WebSocket.acceptWithActor[String, JsValue] { request => out =>
+    UserConnection.props(generalServer, out)
   }
 
   def logging = Action(parse.anyContent) { implicit request =>

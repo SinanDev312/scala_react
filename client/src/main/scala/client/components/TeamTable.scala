@@ -13,32 +13,12 @@ import java.text._
 case class TeamState(m: Map[String, Team])
 
 object TeamTable {
-  def getWebsocketUri(document: Document, nav: Int): String = {
-    val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
-    var url: String = ""
-
-    nav match {
-      case 0 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_risk_ws"
-      case 1 =>
-        url = s"$wsProtocol://${dom.document.location.host}/longterm_bet_ws"
-      case 2 =>
-        url = s"$wsProtocol://${dom.document.location.host}/mark_ws"
-      case 3 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_ws"
-      case 4 =>
-        url = s"$wsProtocol://${dom.document.location.host}/team_ws"
-    }
-   
-    url
-  }
-
   // Team
-  class Backend2($: BackendScope[Map[String, Team], TeamState]) {
+  class Backend($: BackendScope[Map[String, Team], TeamState]) {
     def stop() = {}
 
     def start() = {
-      val uri = getWebsocketUri(dom.document, 4)
+      val uri = SocketURI.getWebsocketUri(dom.document, 4)
       val ws = new WebSocket(uri)
       ws.onopen = { (event: Event) => ws.send("hello") }
       ws.onclose = { (event: Event) => println(event) }
@@ -70,8 +50,9 @@ object TeamTable {
 
   val TeamArea = ReactComponentB[Map[String, Team]]("TeamArea")
     .initialState(TeamState(Map.empty))
-    .backend(new Backend2(_))
+    .backend(new Backend(_))
     .render((P, S, B) => {
+
       <.table(^.id := "team-table", ^.className := "table-bordered",
         <.thead(
           <.tr(
@@ -87,7 +68,9 @@ object TeamTable {
             <.th("Training Error")
           )),
         <.tbody(S.m.map(x => TeamRow(x._2)))
-      ) // table
+      ); // table
+
+      
     })
     .componentDidMount(_.backend.start())
     .componentWillUnmount(_.backend.stop())

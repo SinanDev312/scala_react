@@ -7,7 +7,7 @@ import org.scalajs.dom
 import org.scalajs.dom._
 import org.scalajs.dom.raw.WebSocket
 import upickle.default._
-import client.components.{TeamTable, MatchTable, MarkTable, BetTable, RiskTable}
+import client.components.{TeamTable, MatchTable, MarkTable, BetTable, RiskTable, GeneralTable}
 
 import java.text._
 
@@ -37,32 +37,36 @@ object StockTable {
             <.li(<.a(^.href := "#", "Bets", ^.onClick --> {B.changeNav(1)})),
             <.li(<.a(^.href := "#", "Marks", ^.onClick --> {B.changeNav(2)})),
             <.li(<.a(^.href := "#", "Matches", ^.onClick --> {B.changeNav(3)})),
-            <.li(<.a(^.href := "#", "Teams", ^.onClick --> {B.changeNav(4)}))
+            <.li(<.a(^.href := "#", "Teams", ^.onClick --> {B.changeNav(4)})),
+            <.li(<.a(^.href := "#", "General Table", ^.onClick --> {B.changeNav(5)}))
             ) // ul
           ), // div sidebar
 
-        S.m match {
-          case 0 =>
-            <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.TabArea(Map.empty))
-            )
-          case 1 =>
-            <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area1", BetTable.TabArea(Map.empty))
-            )
-          case 2 =>
-            <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area2", MarkTable.MarkArea(Map.empty))
-            )
-          case 3 =>
-            <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area3", MatchTable.MatchArea(Map.empty))
-            )
-          case 4 =>
-            <.div(^.className := "col-sm-12 col-md-10",
-              <.div(^.className := "table-responsive", ^.id := "table_area4", TeamTable.TeamArea(Map.empty))
-            )
-        }
+          <.div(^.className := "col-sm-12 col-md-10",
+            <.div(^.className := "table-responsive", ^.id := "table_area5", GeneralTable.GenericArea(Map.empty))
+          )
+/*        S.m match {
+            case 0 =>
+              <.div(^.className := "col-sm-12 col-md-10",
+                <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.TabArea(Map.empty))
+              )
+            case 1 =>
+              <.div(^.className := "col-sm-12 col-md-10",
+                <.div(^.className := "table-responsive", ^.id := "table_area1", BetTable.TabArea(Map.empty))
+              )
+            case 2 =>
+              <.div(^.className := "col-sm-12 col-md-10",
+                <.div(^.className := "table-responsive", ^.id := "table_area2", MarkTable.MarkArea(Map.empty))
+              )
+            case 3 =>
+              <.div(^.className := "col-sm-12 col-md-10",
+                <.div(^.className := "table-responsive", ^.id := "table_area3", MatchTable.MatchArea(Map.empty))
+              )
+            case 4 =>
+              <.div(^.className := "col-sm-12 col-md-10",
+                <.div(^.className := "table-responsive", ^.id := "table_area4", TeamTable.TeamArea(Map.empty))
+              )
+          }*/
         ) // div row
     })
     .componentDidMount(_.backend.start())

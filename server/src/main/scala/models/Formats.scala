@@ -63,6 +63,9 @@ object Formats {
   implicit val ratingRiskFormat = Json.format[RatingRisk]
   implicit val ratingRiskFrameFormatter = FrameFormatter.jsonFrame[RatingRisk]
 
+  implicit val generalElemFormat = Json.format[GeneralElement]
+  implicit val generalElemFrameFormatter = FrameFormatter.jsonFrame[GeneralElement]
+
   /** SubscribeEvent */
 
   implicit val subscribeWrites = new Writes[SubscribeEvent] {

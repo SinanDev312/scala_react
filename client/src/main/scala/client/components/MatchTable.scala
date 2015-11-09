@@ -14,32 +14,12 @@ case class MatchState(m: Map[String, Match])
 
 // https://japgolly.github.io/scalajs-react/#examples/product-table
 object MatchTable {
-  def getWebsocketUri(document: Document, nav: Int): String = {
-    val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
-    var url: String = ""
-
-    nav match {
-      case 0 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_risk_ws"
-      case 1 =>
-        url = s"$wsProtocol://${dom.document.location.host}/longterm_bet_ws"
-      case 2 =>
-        url = s"$wsProtocol://${dom.document.location.host}/mark_ws"
-      case 3 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_ws"
-      case 4 =>
-        url = s"$wsProtocol://${dom.document.location.host}/team_ws"
-    }
-   
-    url
-  }
-
   // Match
-  class Backend3($: BackendScope[Map[String, Match], MatchState]) {
+  class Backend($: BackendScope[Map[String, Match], MatchState]) {
     def stop() = {}
 
     def start() = {
-      val uri = getWebsocketUri(dom.document, 3)
+      val uri = SocketURI.getWebsocketUri(dom.document, 3)
       val ws = new WebSocket(uri)
       ws.onopen = { (event: Event) => ws.send("hello") }
       ws.onclose = { (event: Event) => println(event) }
@@ -71,7 +51,7 @@ object MatchTable {
 
   val MatchArea = ReactComponentB[Map[String, Match]]("MatchArea")
     .initialState(MatchState(Map.empty))
-    .backend(new Backend3(_))
+    .backend(new Backend(_))
     .render((P, S, B) => {
       <.table(^.id := "match-table", ^.className := "table-bordered",
         <.thead(

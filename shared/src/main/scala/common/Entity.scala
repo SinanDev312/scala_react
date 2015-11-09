@@ -100,3 +100,8 @@ case class RatingRisk(id: Int,
 				LS: String,
 				risk: Int)
 
+// generic
+case class GeneralElement(id: Int,
+				field1: String,
+				field2: Int,
+				field3: Double)

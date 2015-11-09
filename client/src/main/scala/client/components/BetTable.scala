@@ -14,34 +14,14 @@ case class HedgeBetState(m: Map[String, HedgeBet])
 
 // https://japgolly.github.io/scalajs-react/#examples/product-table
 object BetTable {
-  def getWebsocketUri(document: Document, nav: Int): String = {
-    val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
-    var url: String = ""
-
-    nav match {
-      case 0 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_risk_ws"
-      case 1 =>
-        url = s"$wsProtocol://${dom.document.location.host}/longterm_bet_ws"
-      case 2 =>
-        url = s"$wsProtocol://${dom.document.location.host}/mark_ws"
-      case 3 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_ws"
-      case 4 =>
-        url = s"$wsProtocol://${dom.document.location.host}/team_ws"
-      case 6 =>
-        url = s"$wsProtocol://${dom.document.location.host}/hedge_bet_ws"
-    }
-   
-    url
-  }
+  val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
 
   // LongTermBet
-  class Backend5($: BackendScope[Map[String, LongTermBet], LongTermBetState]) {
+  class Backend1($: BackendScope[Map[String, LongTermBet], LongTermBetState]) {
     def stop() = {}
 
     def start() = {
-      val uri = getWebsocketUri(dom.document, 1)
+      val uri = SocketURI.getWebsocketUri(dom.document, 1)
       val ws = new WebSocket(uri)
       ws.onopen = { (event: Event) => ws.send("hello") }
       ws.onclose = { (event: Event) => println(event) }
@@ -72,7 +52,7 @@ object BetTable {
 
   val LongTermBetArea = ReactComponentB[Map[String, LongTermBet]]("LongTermBetArea")
     .initialState(LongTermBetState(Map.empty))
-    .backend(new Backend5(_))
+    .backend(new Backend1(_))
     .render((P, S, B) => {
       <.table(^.id := "longtermbet-table", ^.className := "table-bordered",
         <.thead(
@@ -95,11 +75,11 @@ object BetTable {
     .build
  
   // HedgeBet
-  class Backend7($: BackendScope[Map[String, HedgeBet], HedgeBetState]) {
+  class Backend2($: BackendScope[Map[String, HedgeBet], HedgeBetState]) {
     def stop() = {}
 
     def start() = {
-      val uri = getWebsocketUri(dom.document, 6)
+      val uri = SocketURI.getWebsocketUri(dom.document, 5)
       val ws = new WebSocket(uri)
       ws.onopen = { (event: Event) => ws.send("hello") }
       ws.onclose = { (event: Event) => println(event) }
@@ -130,7 +110,7 @@ object BetTable {
 
   val HedgeBetArea = ReactComponentB[Map[String, HedgeBet]]("HedgeBetArea")
     .initialState(HedgeBetState(Map.empty))
-    .backend(new Backend7(_))
+    .backend(new Backend2(_))
     .render((P, S, B) => {
       <.table(^.id := "longtermbet-table", ^.className := "table-bordered",
         <.thead(

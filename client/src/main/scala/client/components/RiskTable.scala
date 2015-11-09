@@ -15,34 +15,12 @@ case class TabState(m: Int)
 
 // https://japgolly.github.io/scalajs-react/#examples/product-table
 object RiskTable {
-  def getWebsocketUri(document: Document, nav: Int): String = {
-    val wsProtocol = if (dom.document.location.protocol == "https:") "wss" else "ws"
-    var url: String = ""
-
-    nav match {
-      case 0 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_risk_ws"
-      case 1 =>
-        url = s"$wsProtocol://${dom.document.location.host}/longterm_bet_ws"
-      case 2 =>
-        url = s"$wsProtocol://${dom.document.location.host}/mark_ws"
-      case 3 =>
-        url = s"$wsProtocol://${dom.document.location.host}/match_ws"
-      case 4 =>
-        url = s"$wsProtocol://${dom.document.location.host}/team_ws"
-      case 5 =>
-        url = s"$wsProtocol://${dom.document.location.host}/rating_risk_ws"
-    }
-   
-    url
-  }
-
   // render
   class Backend1($: BackendScope[Map[String, MatchRisk], MatchRiskState]) {
     def stop() = {}
 
     def start() = {
-      val uri = getWebsocketUri(dom.document, 0)
+      val uri = SocketURI.getWebsocketUri(dom.document, 0)
       val ws = new WebSocket(uri)
       ws.onopen = { (event: Event) => ws.send("hello") }
       ws.onclose = { (event: Event) => println(event) }
@@ -90,11 +68,11 @@ object RiskTable {
     .build
 
   // render
-  class Backend6($: BackendScope[Map[String, RatingRisk], RatingRiskState]) {
+  class Backend2($: BackendScope[Map[String, RatingRisk], RatingRiskState]) {
     def stop() = {}
 
     def start() = {
-      val uri = getWebsocketUri(dom.document, 5)
+      val uri = SocketURI.getWebsocketUri(dom.document, 6)
       val ws = new WebSocket(uri)
       ws.onopen = { (event: Event) => ws.send("hello") }
       ws.onclose = { (event: Event) => println(event) }
@@ -123,7 +101,7 @@ object RiskTable {
 
   val RatingRiskArea = ReactComponentB[Map[String, RatingRisk]]("RatingRiskArea")
     .initialState(RatingRiskState(Map.empty))
-    .backend(new Backend6(_))
+    .backend(new Backend2(_))
     .render((P, S, B) => {
       <.table(^.id := "matchrisk-table", ^.className := "table-bordered",
         <.thead(

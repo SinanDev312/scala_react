@@ -11,6 +11,7 @@ import services.LBetServer._
 import services.HBetServer._
 import services.MatchRiskServer._
 import services.RatingRiskServer._
+import services.GeneralServer._
 
 object UserConnection {
   def props(infoServer: ActorRef, out: ActorRef): Props = Props(classOf[UserConnection], infoServer, out)
@@ -92,6 +93,12 @@ class UserConnection(infoServer: ActorRef, out: ActorRef) extends Actor with Act
     case ratingriskinfo: RatingRisk => {
       log.debug(s"GOT $ratingriskinfo")
       out ! Json.toJson(ratingriskinfo)
+    }
+
+    // general element
+    case generaleleminfo: GeneralElement => {
+      log.debug(s"GOT $generaleleminfo")
+      out ! Json.toJson(generaleleminfo)
     }
 
     case x => log.debug(s"got: $x")
