@@ -42,10 +42,8 @@ object StockTable {
             ) // ul
           ), // div sidebar
 
-          <.div(^.className := "col-sm-12 col-md-10",
-            <.div(^.className := "table-responsive", ^.id := "table_area5", GeneralTable.GenericArea(Map.empty))
-          )
-/*        S.m match {
+          
+          S.m match {
             case 0 =>
               <.div(^.className := "col-sm-12 col-md-10",
                 <.div(^.className := "table-responsive", ^.id := "table_area0", RiskTable.TabArea(Map.empty))
@@ -66,7 +64,11 @@ object StockTable {
               <.div(^.className := "col-sm-12 col-md-10",
                 <.div(^.className := "table-responsive", ^.id := "table_area4", TeamTable.TeamArea(Map.empty))
               )
-          }*/
+            case 5=>
+              <.div(^.className := "col-sm-12 col-md-10",
+                <.div(^.className := "table-responsive", ^.id := "table_area5", GeneralTable.GenericArea(Map.empty))
+              )
+          }
         ) // div row
     })
     .componentDidMount(_.backend.start())
